@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏫 학교생활로 알아보는 MBTI 테스트</title>
+    <style>
+        /* 폰트 및 기본 스타일 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        :root {
+            --primary-deep-green: #1b4332;
+            --mint-accent: #52b788;
+            --soft-green: #d8f3dc;
+            --bg-color: #f4f9f4;
+            --text-color: #2d3748;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            max-width: 500px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(27, 67, 50, 0.1);
+            padding: 40px 30px;
+            text-align: center;
+            border: 2px solid var(--soft-green);
+        }
+
+        /* 공통 버튼 스타일 */
+        button {
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-main {
+            background-color: var(--primary-deep-green);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            margin-top: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-main:hover {
+            background-color: var(--mint-accent);
+            transform: translateY(-2px);
+        }
+
+        /* 시작 화면 */
+        #start-screen .icon {
+            font-size: 4.5rem;
+            margin-bottom: 20px;
+        }
+
+        #start-screen h1 {
+            color: var(--primary-deep-green);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            word-break: keep-all;
+        }
+
+        #start-screen p {
+            color: #718096;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* 질문 화면 */
+        #question-screen {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--soft-green);
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--mint-accent);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-deep-green);
+            margin-bottom: 35px;
+            word-break: keep-all;
+            line-height: 1.4;
+        }
+
+        .answer-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-answer {
+            background-color: #ffffff;
+            border: 2px solid var(--soft-green);
+            color: var(--text-color);
+            padding: 20px;
+            font-size: 1rem;
+            border-radius: 15px;
+            text-align: left;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .btn-answer:hover {
+            border-color: var(--primary-deep-green);
+            background-color: var(--soft-green);
+            color: var(--primary-deep-green);
+        }
+
+        /* 결과 화면 */
+        #result-screen {
+            display: none;
+        }
+
+        #result-screen h2 {
+            color: #718096;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .result-mbti {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-deep-green);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .result-tags {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+        }
+
+        .result-desc {
+            background-color: var(--soft-green);
+            padding: 20px;
+            border-radius: 15px;
+            color: var(--primary-deep-green);
+            font-size: 1rem;
+            line-height: 1.6;
+            text-align: left;
+            margin-bottom: 30px;
+            word-break: keep-all;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 1. 시작 화면 -->
+        <div id="start-screen">
+            <div class="icon">🎒</div>
+            <h1>학교생활로 알아보는<br>나의 찐 MBTI 테스트</h1>
+            <p>교문을 나설 때부터 종이 칠 때까지,<br>내 진짜 학교생활 속 성향은 어떨까?</p>
+            <button class="btn-main" onclick="startTest()">테스트 시작하기 📝</button>
+        </div>
+
+        <!-- 2. 질문 화면 -->
+        <div id="question-screen">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="question-text" id="question">질문 텍스트</div>
+            <div class="answer-box">
+                <button class="btn-answer" id="answerA" onclick="selectAnswer('A')">선택지 A</button>
+                <button class="btn-answer" id="answerB" onclick="selectAnswer('B')">선택지 B</button>
+            </div>
+        </div>
+
+        <!-- 3. 결과 화면 -->
+        <div id="result-screen">
+            <h2>당신의 학교생활 스타일은?</h2>
+            <div class="result-mbti" id="result-mbti">ISFP</div>
+            <div class="result-tags" id="result-tags">🎨 🛌 🧃</div>
+            <div class="result-desc" id="result-desc">결과 설명</div>
+            <button class="btn-main" onclick="restartTest()">다시 테스트하기 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        // 데이터 정의: 질문리스트
+        const questions = [
+            {
+                type: "EI",
+                q: "🏃‍♂️ 드디어 기다리던 점심시간! 당신의 행동은?",
+                a: "친구들 무리에 슬쩍 껴서 왁자지껄 수다 떨며 밥 먹으러 간다.",
+                b: "친한 친구 한두 명과 조용히 먹거나, 자리에서 편하게 쉬고 싶다."
+            },
+            {
+                type: "SN",
+                q: "💡 선생님이 수행평가 주제를 '자유 주제'로 내주셨다!",
+                a: "과거 선배들이 했던 무난하고 안전한 주제나 확실한 예시부터 찾아본다.",
+                b: "아무도 안 했을 법한 기발하고 독특한 아이디어를 혼자 상상해 본다."
+            },
+            {
+                type: "TF",
+                q: "😢 친구가 시험을 망쳤다며 속상해하고 있을 때 당신의 위로는?",
+                a: "몇 번 문제 틀렸어? 오답노트 같이 보면서 다음엔 실수하지 말자고 한다.",
+                b: "아이고 속상했겠다... ㅠㅠ 시험이 너무 어려웠어! 맛있는 거 먹으러 가자!"
+            },
+            {
+                type: "JP",
+                q: "📅 시험 기간 D-3주! 당신의 공부 계획은?",
+                a: "주별, 일별로 과목을 쪼개서 철저하게 계획표를 짜고 그대로 실천한다.",
+                b: "일단 시험 범위만 쓱 훑어보고, 공부는 원래 일주일 전부터 몰아서 하는 법!"
+            }
+        ];
+
+        // 데이터 정의: 결과리스트
+        const results = {
+            "ESTJ": { tags: "📢 🔍 📐", desc: "학급의 든든한 반장 스타일! 규칙과 계획을 중요하게 생각하며 과제를 할 때도 완벽한 효율을 추구합니다." },
+            "ESTP": { tags: "🔥 ⚡ ⚽", desc: "체육시간의 지배자! 활발하고 에너지가 넘치며, 말보다는 행동으로 학교생활을 다이내믹하게 즐깁니다." },
+            "ESFJ": { tags: "🌸 🤝 💌", desc: "모든 친구를 챙기는 다정다감 인싸! 반에 소외되는 친구가 없도록 챙겨주는 따뜻한 마당발입니다." },
+            "ESFP": { tags: "🎉 🎤 🕺", desc: "축제 무대 주인공은 나야 나! 분위기 메이커 역할을 톡톡히 하며 매일 학교 오는 것이 축제 같은 스타일입니다." },
+            "ENTJ": { tags: "👑 🚀 🎯", desc: "조별과제 프리패스 조장! 리더십이 뛰어나 팀원들을 일사불란하게 이끌고 무조건 A+을 받아내는 능력자입니다." },
+            "ENTP": { tags: "🧐 💬 🎪", desc: "선생님 말씀에 '왜요?'를 담당하는 호기심 천국! 토론 시간에 가장 눈이 반짝이며, 재치 있는 말재주로 인기가 많습니다." },
+            "ENFJ": { tags: "🌟 📻 🕊️", desc: "고민 상담소의 다정한 선배! 친구들의 이야기에 깊이 공감해 주고 긍정적인 에너지를 뿜뿜 풍기는 리더입니다." },
+            "ENFP": { tags: "🌈 🦄 🎈", desc: "쉬는 시간마다 다른 반 투어 다니는 댕댕이! 리액션이 제일 좋고 창의적이며 번뜩이는 아이디어가 많습니다." },
+            "ISTJ": { tags: "📝 ⏱️ 🎒", desc: "조용히 전교 상위권을 지키는 정석파! 교과서, 필기 도구가 항상 완벽히 정리되어 있고 성실함의 끝판왕입니다." },
+            "ISTP": { tags: "🛹 🛠️ 🕶️", desc: "종 치면 칼같이 사라지는 효율주의자! 말수는 적지만 은근히 다재다능하고 벼락치기에 엄청난 재능을 보입니다." },
+            "ISFJ": { tags: "🧸 🥛 🩹", desc: "가방 안에 온갖 비상약을 챙겨 다니는 천사! 뒤에서 묵묵히 친구들을 돕고 배려해 주는 따뜻한 수호천사입니다." },
+            "ISFP": { tags: "🎨 🛌 🧃", desc: "하교 후 침대와의 물아일체를 꿈꾸는 평화주의자! 갈등을 싫어하며 혼자 조용히 낙서하거나 음악 듣는 것을 좋아합니다." },
+            "INTJ": { tags: "🔮 🧩 👁️", desc: "혼자만의 세계가 확실한 전략가! 쉬는 시간에도 책을 읽거나 심오한 생각을 하며, 계획한 목표는 독하게 이뤄냅니다." },
+            "INTP": { tags: "🧪 💻 🔲", desc: "자신이 좋아하는 과목만 100점 맞는 천재형! 관심 없는 수업엔 멍 때리지만 독특한 분야 지식이 해박합니다." },
+            "INFJ": { tags: "🌙 📜 🔮", desc: "은밀하게 친구들을 관찰하는 다정한 은둔자! 속 깊은 생각과 일기 쓰기를 좋아하며 깊은 우정을 소중히 여깁니다." },
+            "INFP": { tags: "🍀 💭 🎧", desc: "감수성 폭발하는 프로 망상러! 창가 자리에 앉아 이어폰을 끼고 한 편의 영화를 찍는 로맨티스트입니다." }
+        };
+
+        let currentIdx = 0;
+        let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+
+        const startScreen = document.getElementById("start-screen");
+        const questionScreen = document.getElementById("question-screen");
+        const resultScreen = document.getElementById("result-screen");
+
+        // 테스트 시작
+        function startTest() {
+            startScreen.style.display = "none";
+            questionScreen.style.display = "block";
+            showQuestion();
+        }
+
+        // 질문 렌더링
+        function showQuestion() {
+            if (currentIdx >= questions.length) {
+                showResult();
+                return;
+            }
+            
+            // 진행도 바 업데이트
+            const progress = document.getElementById("progress");
+            progress.style.width = `${(currentIdx / questions.length) * 100}%`;
+
+            const currentQ = questions[currentIdx];
+            document.getElementById("question").innerText = currentQ.q;
+            document.getElementById("answerA").innerText = currentQ.a;
+            document.getElementById("answerB").innerText = currentQ.b;
+        }
+
+        // 답변 선택 시 점수 계산
+        function selectAnswer(type) {
+            const currentQ = questions[currentIdx];
+            const mbtiType = currentQ.type; // 예: "EI"
+
+            if (type === 'A') {
+                scores[mbtiType[0]]++;
+            } else {
+                scores[mbtiType[1]]++;
+            }
+
+            currentIdx++;
+            showQuestion();
+        }
+
+        // 결과 산출 및 화면 전환
+        function showResult() {
+            questionScreen.style.display = "none";
+            resultScreen.style.display = "block";
+
+            let mbti = "";
+            mbti += scores.E >= scores.I ? "E" : "I";
+            mbti += scores.S >= scores.N ? "S" : "N";
+            mbti += scores.T >= scores.F ? "T" : "F";
+            mbti += scores.J >= scores.P ? "J" : "P";
+
+            const resultData = results[mbti];
+            
+            document.getElementById("result-mbti").innerText = mbti;
+            document.getElementById("result-tags").innerText = resultData.tags;
+            document.getElementById("result-desc").innerText = resultData.desc;
+        }
+
+        // 다시 하기
+        function restartTest() {
+            currentIdx = 0;
+            scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+            resultScreen.style.display = "none";
+            startScreen.style.display = "block";
+        }
+    </script>
+</body>
+</html>
