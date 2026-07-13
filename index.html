@@ -6,14 +6,16 @@
     <title>🏫 학교생활로 알아보는 MBTI 테스트</title>
     <style>
         /* 폰트 및 기본 스타일 */
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
         
         :root {
-            --primary-deep-green: #1b4332;
-            --mint-accent: #52b788;
-            --soft-green: #d8f3dc;
-            --bg-color: #f4f9f4;
-            --text-color: #2d3748;
+            --bg-deep-green: #0b251a;       /* 전체 배경 딥그린 */
+            --card-deep-green: #143626;     /* 메인 컨테이너 딥그린 */
+            --gold-accent: #dfb15b;         /* 골드 포인트 색상 */
+            --gold-hover: #f5cf7a;          /* 골드 호버 */
+            --soft-green: #23533c;          /* 부드러운 그린 */
+            --text-light: #f0f7f4;          /* 밝은 텍스트 */
+            --text-muted: #a3b899;          /* 흐린 텍스트 */
         }
 
         * {
@@ -24,8 +26,8 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--bg-deep-green);
+            color: var(--text-light);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -34,57 +36,63 @@
         }
 
         .container {
-            background: #ffffff;
-            max-width: 500px;
+            background: var(--card-deep-green);
+            max-width: 520px;
             width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(27, 67, 50, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             padding: 40px 30px;
             text-align: center;
-            border: 2px solid var(--soft-green);
+            border: 2px solid var(--gold-accent);
+            position: relative;
         }
 
         /* 공통 버튼 스타일 */
         button {
             cursor: pointer;
             outline: none;
-            transition: all 0.2s ease-in-out;
+            transition: all 0.25s ease-in-out;
         }
 
         .btn-main {
-            background-color: var(--primary-deep-green);
-            color: white;
+            background-color: var(--gold-accent);
+            color: var(--bg-deep-green);
             border: none;
-            padding: 15px 35px;
+            padding: 16px 40px;
             font-size: 1.1rem;
             font-weight: bold;
             border-radius: 30px;
             margin-top: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(223, 177, 91, 0.3);
         }
 
         .btn-main:hover {
-            background-color: var(--mint-accent);
+            background-color: var(--gold-hover);
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(223, 177, 91, 0.5);
         }
 
         /* 시작 화면 */
         #start-screen .icon {
-            font-size: 4.5rem;
+            font-size: 5rem;
             margin-bottom: 20px;
+            display: inline-block;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
         }
 
         #start-screen h1 {
-            color: var(--primary-deep-green);
-            font-size: 1.8rem;
+            color: var(--gold-accent);
+            font-size: 2rem;
             margin-bottom: 15px;
             word-break: keep-all;
+            line-height: 1.4;
         }
 
         #start-screen p {
-            color: #718096;
-            font-size: 1rem;
-            line-height: 1.5;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
         }
 
         /* 질문 화면 */
@@ -92,53 +100,71 @@
             display: none;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background-color: var(--soft-green);
-            border-radius: 4px;
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 30px;
+        }
+
+        .progress-text {
+            font-size: 0.95rem;
+            color: var(--gold-accent);
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 80%;
+            height: 10px;
+            background-color: var(--soft-green);
+            border-radius: 5px;
             overflow: hidden;
+            border: 1px solid rgba(223, 177, 91, 0.2);
         }
 
         .progress {
             height: 100%;
-            background-color: var(--mint-accent);
+            background-color: var(--gold-accent);
             width: 0%;
             transition: width 0.3s ease;
         }
 
         .question-text {
-            font-size: 1.3rem;
+            font-size: 1.35rem;
             font-weight: 700;
-            color: var(--primary-deep-green);
+            color: var(--text-light);
             margin-bottom: 35px;
             word-break: keep-all;
-            line-height: 1.4;
+            line-height: 1.5;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .answer-box {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 16px;
         }
 
         .btn-answer {
-            background-color: #ffffff;
-            border: 2px solid var(--soft-green);
-            color: var(--text-color);
-            padding: 20px;
-            font-size: 1rem;
-            border-radius: 15px;
+            background-color: var(--soft-green);
+            border: 2px solid transparent;
+            color: var(--text-light);
+            padding: 22px 20px;
+            font-size: 1.05rem;
+            border-radius: 16px;
             text-align: left;
             font-weight: 500;
             line-height: 1.4;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .btn-answer:hover {
-            border-color: var(--primary-deep-green);
-            background-color: var(--soft-green);
-            color: var(--primary-deep-green);
+            border-color: var(--gold-accent);
+            background-color: #2c6349;
+            transform: translateX(4px);
         }
 
         /* 결과 화면 */
@@ -147,34 +173,37 @@
         }
 
         #result-screen h2 {
-            color: #718096;
+            color: var(--text-muted);
             font-size: 1.1rem;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
         }
 
         .result-mbti {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: bold;
-            color: var(--primary-deep-green);
-            letter-spacing: 2px;
+            color: var(--gold-accent);
+            letter-spacing: 3px;
             margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(223, 177, 91, 0.3);
         }
 
         .result-tags {
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin-bottom: 25px;
         }
 
         .result-desc {
             background-color: var(--soft-green);
-            padding: 20px;
-            border-radius: 15px;
-            color: var(--primary-deep-green);
-            font-size: 1rem;
-            line-height: 1.6;
+            padding: 25px;
+            border-radius: 18px;
+            color: var(--text-light);
+            font-size: 1.05rem;
+            line-height: 1.7;
             text-align: left;
             margin-bottom: 30px;
             word-break: keep-all;
+            border-left: 5px solid var(--gold-accent);
         }
     </style>
 </head>
@@ -183,16 +212,20 @@
     <div class="container">
         <!-- 1. 시작 화면 -->
         <div id="start-screen">
-            <div class="icon">🎒</div>
+            <div class="icon">🏫✨</div>
             <h1>학교생활로 알아보는<br>나의 찐 MBTI 테스트</h1>
-            <p>교문을 나설 때부터 종이 칠 때까지,<br>내 진짜 학교생활 속 성향은 어떨까?</p>
+            <p>교문을 나설 때부터 야자 종이 칠 때까지,</p>
+            <p>더 디테일해진 8문항으로 나의 성향을 확인해봐요!</p>
             <button class="btn-main" onclick="startTest()">테스트 시작하기 📝</button>
         </div>
 
         <!-- 2. 질문 화면 -->
         <div id="question-screen">
-            <div class="progress-bar">
-                <div class="progress" id="progress"></div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <div class="progress-text" id="progress-text">1 / 8</div>
             </div>
             <div class="question-text" id="question">질문 텍스트</div>
             <div class="answer-box">
@@ -212,7 +245,7 @@
     </div>
 
     <script>
-        // 데이터 정의: 질문리스트
+        // 데이터 정의: 8개 질문 리스트 (지표당 2문항씩 배치)
         const questions = [
             {
                 type: "EI",
@@ -237,6 +270,30 @@
                 q: "📅 시험 기간 D-3주! 당신의 공부 계획은?",
                 a: "주별, 일별로 과목을 쪼개서 철저하게 계획표를 짜고 그대로 실천한다.",
                 b: "일단 시험 범위만 쓱 훑어보고, 공부는 원래 일주일 전부터 몰아서 하는 법!"
+            },
+            {
+                type: "EI",
+                q: "🏫 새 학기 첫날, 교실 문을 열고 들어섰을 때 내 마음은?",
+                a: "새로운 친구들을 만날 생각에 은근히 설레고 누구 자리에 앉을지 탐색한다.",
+                b: "낯선 공기에 기가 좀 빨리고, 우선 조용히 뒤쪽 빈자리에 가서 앉는다."
+            },
+            {
+                type: "SN",
+                q: "📖 멍하니 수업을 듣다가 창밖을 바라볼 때 드는 생각은?",
+                a: "'날씨 좋다, 끝나고 뭐 먹지?', '체육 교과서 가져왔나?' 같은 현실적인 생각",
+                b: "'갑자기 학교에 좀비가 나타나면 어떻게 탈출하지?' 같은 상상의 나래"
+            },
+            {
+                type: "TF",
+                q: "💬 조별과제 중 한 조원이 '미안, 사정이 있어서 자료조사 늦어질 것 같아'라고 한다면?",
+                a: "사정은 안타깝지만 조 전체에 피해가 가니까, 언제까지 가능한지 정확한 기한을 요구한다.",
+                b: "많이 바쁜가 보네 ㅠㅠ 힘들겠다! 괜찮으니까 가능한 만큼만 먼저 보내달라고 다독인다."
+            },
+            {
+                type: "JP",
+                q: "🎒 주말에 친구들과 시험이 끝난 기념으로 놀러 가기로 했다. 내 스타일은?",
+                a: "맛집, 코인노래방, 카페 동선과 시간대까지 미리 싹 다 알아보고 공유한다.",
+                b: "만나는 시간และ 장소만 정해두고, 구체적인 행선지는 만나서 땡기는 대로 정한다."
             }
         ];
 
@@ -281,9 +338,10 @@
                 return;
             }
             
-            // 진행도 바 업데이트
+            // 진행도 바 및 텍스트 업데이트
             const progress = document.getElementById("progress");
-            progress.style.width = `${(currentIdx / questions.length) * 100}%`;
+            progress.style.width = `${((currentIdx) / questions.length) * 100}%`;
+            document.getElementById("progress-text").innerText = `${currentIdx + 1} / ${questions.length}`;
 
             const currentQ = questions[currentIdx];
             document.getElementById("question").innerText = currentQ.q;
